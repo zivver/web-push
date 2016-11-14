@@ -118,8 +118,5 @@ registration.pushManager.subscribe({
 
 * Mozilla developer network [Using Push API](https://developer.mozilla.org/en-US/docs/Web/API/Push_API/Using_the_Push_API)
 
-* The [Service Worker Cookbook](https://serviceworke.rs/) is full of Web Push
-examples using this library.
-
 # Credit
 This library is mostly a Scala port from [MartijnDwars/web-push](https://github.com/MartijnDwars/web-push) and [web-push-libs/web-push](web-push-libs/web-push)
