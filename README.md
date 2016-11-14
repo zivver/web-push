@@ -39,6 +39,7 @@ There are several ways to generate VAPID keys. Easiest way to do this is to use 
  * Using the web-push node library CLI
  * Using OpenSSL
  * Any of the libraries in  libraries in https://github.com/web-push-libs/vapid
+ 
 ### Using the web-push node library CLI
 
 ```javascript
