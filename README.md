@@ -6,7 +6,7 @@ Scala library for easy Web Push message sending. This library uses latest VAPID 
 
 Using SBT.
 
-    libraryDependencies += "com.zivver" %% "web-push" % "0.1.0"
+    libraryDependencies += "com.zivver" %% "web-push" % "0.1.1"
 
 # Basic Usage
 
