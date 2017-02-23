@@ -1,6 +1,6 @@
 package com.zivver.webpush
 
-import java.security._
+import java.security.interfaces.{ECPrivateKey, ECPublicKey}
 import java.util.Base64
 
 import com.zivver.webpush.Encryption.Encrypted
@@ -10,7 +10,6 @@ import org.apache.http.client.methods.HttpPost
 import org.apache.http.entity.ByteArrayEntity
 import org.apache.http.impl.client.HttpClients
 import org.apache.http.message.BasicHeader
-import org.bouncycastle.jce.interfaces.ECPublicKey
 import pdi.jwt.Jwt
 import pdi.jwt.JwtAlgorithm.ES256
 
@@ -19,7 +18,7 @@ import scala.concurrent.duration._
 /**
   * Push service.
   */
-case class PushService(publicKey: PublicKey, privateKey: PrivateKey, subject: String, exp: FiniteDuration = 12.hours) {
+case class PushService(publicKey: ECPublicKey, privateKey: ECPrivateKey, subject: String, exp: FiniteDuration = 12.hours) {
 
   private val base64encoder = Base64.getUrlEncoder
   private val defaultTtl: Int = 2419200
@@ -68,6 +67,13 @@ case class PushService(publicKey: PublicKey, privateKey: PrivateKey, subject: St
     */
   def send(subscription: Subscription, payload: Array[Byte], ttl: Int = defaultTtl): HttpResponse = send(subscription, Some(payload), ttl)
 
+  /**
+    * Returns the server public key as a URL safe base64 string.
+    */
+  def publicKeyToBase64: String = {
+    base64encoder.withoutPadding().encodeToString(Utils.publicKeyToBytes(publicKey.asInstanceOf[ECPublicKey]))
+  }
+
   private def send(subscription: Subscription, payload: Option[Array[Byte]], ttl: Int) = {
 
     val httpPost = new HttpPost(subscription.endpoint)
@@ -90,7 +96,7 @@ case class PushService(publicKey: PublicKey, privateKey: PrivateKey, subject: St
           "exp" -> ((System.currentTimeMillis() + exp.toMillis) / 1000).toString,
           "sub" -> subject
         )), privateKey, ES256)),
-      "Crypto-Key" -> ("p256ecdsa=" + base64encoder.withoutPadding().encodeToString(Utils.savePublicKey(publicKey.asInstanceOf[ECPublicKey])))
+      "Crypto-Key" -> ("p256ecdsa=" + publicKeyToBase64)
     )
   }
 
@@ -99,8 +105,8 @@ case class PushService(publicKey: PublicKey, privateKey: PrivateKey, subject: St
     (Map(
       "Content-Encoding" -> "aesgcm",
       "Encryption" -> ("keyid=p256dh;salt=" + base64encoder.withoutPadding().encodeToString(encrypted.salt)),
-      "Crypto-Key" -> ("keyid=p256dh;dh=" + base64encoder.encodeToString(Utils.savePublicKey(encrypted.publicKey.asInstanceOf[ECPublicKey])) +
-        ";p256ecdsa=" + base64encoder.withoutPadding().encodeToString(Utils.savePublicKey(publicKey.asInstanceOf[ECPublicKey])))
+      "Crypto-Key" -> ("keyid=p256dh;dh=" + base64encoder.encodeToString(Utils.publicKeyToBytes(encrypted.publicKey.asInstanceOf[ECPublicKey])) +
+        ";p256ecdsa=" + base64encoder.withoutPadding().encodeToString(Utils.publicKeyToBytes(publicKey.asInstanceOf[ECPublicKey])))
     ), encrypted.ciphertext)
   }
 }

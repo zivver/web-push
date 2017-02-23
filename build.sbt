@@ -3,7 +3,7 @@ name := "web-push"
 
 organization := "com.zivver"
 
-version := "0.1.1"
+version := "0.2.1"
 
 scalaVersion := "2.12.1"
 
@@ -30,7 +30,7 @@ publishArtifact in Test := false
 pomIncludeRepository := { _ => false }
 
 pomExtra := (
-  <url>http://your.project.url</url>
+  <url>https://github.com/zivver/web-push</url>
     <licenses>
       <license>
         <name>MIT License</name>

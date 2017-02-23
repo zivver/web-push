@@ -2,13 +2,13 @@ package com.zivver.webpush
 
 import java.nio.ByteBuffer
 import java.security._
+import java.security.interfaces.ECPublicKey
 import javax.crypto._
 import javax.crypto.spec.{GCMParameterSpec, SecretKeySpec}
 
 import org.bouncycastle.crypto.digests.SHA256Digest
 import org.bouncycastle.crypto.generators.HKDFBytesGenerator
 import org.bouncycastle.crypto.params.HKDFParameters
-import org.bouncycastle.jce.interfaces.ECPublicKey
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 
 /**
@@ -41,7 +41,7 @@ object HttpEce {
   }
 
   private def lengthPrefix(key: Key): Array[Byte] = {
-    val bytes = Utils.savePublicKey(key.asInstanceOf[ECPublicKey])
+    val bytes = Utils.publicKeyToBytes(key.asInstanceOf[ECPublicKey])
     //    Cast an integer to a two-byte array
     Array((bytes.length >> 8).toByte, (bytes.length & 0xff).toByte) ++ bytes
   }
