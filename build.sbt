@@ -7,7 +7,7 @@ version := "0.2.2"
 
 scalaVersion := "2.12.1"
 
-crossScalaVersions := Seq("2.11.8", "2.12.1")
+crossScalaVersions := Seq("2.11.11", "2.12.1")
 
 libraryDependencies ++= Seq(
   "com.pauldijou" %% "jwt-core" % "0.10.0",
