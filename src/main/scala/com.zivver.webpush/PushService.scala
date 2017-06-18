@@ -8,7 +8,8 @@ import org.apache.http.HttpResponse
 import org.apache.http.client.HttpClient
 import org.apache.http.client.methods.HttpPost
 import org.apache.http.entity.ByteArrayEntity
-import org.apache.http.impl.client.HttpClients
+import org.apache.http.client.config.RequestConfig
+import org.apache.http.impl.client.HttpClientBuilder
 import org.apache.http.message.BasicHeader
 import pdi.jwt.Jwt
 import pdi.jwt.JwtAlgorithm.ES256
@@ -22,7 +23,20 @@ case class PushService(publicKey: ECPublicKey, privateKey: ECPrivateKey, subject
 
   private val base64encoder = Base64.getUrlEncoder
   private val defaultTtl: Int = 2419200
-  private val httpClient: HttpClient = HttpClients.createDefault
+  private lazy val httpClient: HttpClient = createHttpClient
+
+  /**
+    * Creates a sensible HttpClient with basic timeouts of 5 secs
+    * @return
+    */
+  protected def createHttpClient: HttpClient = {
+    val timeout = 5
+    val config = RequestConfig.custom
+      .setConnectTimeout(timeout * 1000)
+      .setConnectionRequestTimeout(timeout * 1000)
+      .setSocketTimeout(timeout * 1000).build
+    HttpClientBuilder.create.setDefaultRequestConfig(config).build
+  }
 
   /**
     * Send a data free push notification.
