@@ -3,15 +3,15 @@ name := "web-push"
 
 organization := "com.zivver"
 
-version := "0.2.2"
+version := "0.2.3"
 
-scalaVersion := "2.12.1"
+scalaVersion := "2.12.4"
 
-crossScalaVersions := Seq("2.11.11", "2.12.1")
+crossScalaVersions := Seq("2.11.11", "2.12.4")
 
 libraryDependencies ++= Seq(
-  "com.pauldijou" %% "jwt-core" % "0.13.0",
-  "org.apache.httpcomponents" % "fluent-hc" % "4.5.2",
+  "com.pauldijou" %% "jwt-core" % "0.14.1",
+  "org.apache.httpcomponents" % "fluent-hc" % "4.5.3",
   "org.bouncycastle" % "bcprov-jdk15on" % "1.57"
 )
 
